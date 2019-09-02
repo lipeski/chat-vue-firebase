@@ -1,6 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+// Aqui vamos carregar nossos componentes, importando eles desta maneira serão criados arquivos separados para cada um dos componentes e estes só serão carregados após a rota ser acessada.
+const Login = () => import('@/views/Login' /* webpackChunkName: "login" */)
+const Register = () => import('@/views/Register' /* webpackChunkName: "register" */)
+const Chat = () => import('@/views/Chat' /* webpackChunkName: "chat" */)
+
+// Redireciona o usuário para o chat caso o usuário já esteja logado
+const redirectToChat = (to, from, next) => window.firebase.auth().currentUser ? next('/') : next()
+// Redireciona o usuário para o login se o usuário não estiver logado
+const redirectToLogin = (to, from, next) => !window.firebase.auth().currentUser ? next('/login') : next()
 
 Vue.use(Router)
 
@@ -9,17 +17,26 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: Home
+      name: 'login',
+      path: '/login',
+      component: Login,
+      beforeEnter: redirectToChat
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      name: 'register',
+      path: '/register',
+      component: Register,
+      beforeEnter: redirectToChat
+    },
+    {
+      name: 'chat',
+      path: '/',
+      component: Chat,
+      beforeEnter: redirectToLogin
+    },
+    {
+      path: '*',
+      redirect: '/'
     }
   ]
 })
