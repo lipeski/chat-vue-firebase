@@ -1,9 +1,9 @@
 Projeto de Chat realizado em workshop
 
 Este projeto foi Utilizado:
-Vue / Vuex / Vue-router 
-Bootstrap
-Firebase
+*Vue / Vuex / Vue-router 
+*Bootstrap
+*Firebase
 
 
 ## Project setup
